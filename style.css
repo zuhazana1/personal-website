@@ -7,7 +7,7 @@
   --teal: #3b6ea5;
   --red: #222222;
   --gold: #a3a3a3;
-  --body-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --body-font: "Times New Roman", Times, Georgia, serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -42,8 +42,25 @@ h3 { font-size: 1rem; font-weight: 600; margin: 3rem 0 0.75rem; }
 
 .hero { display: flex; flex-direction: column; }
 .hero figure { order: -1; margin: 0 0 1.5rem; }
-.portrait { width: 88px; height: 88px; object-fit: cover; border-radius: 50%; }
+.portrait { width: 140px; height: 140px; object-fit: cover; border-radius: 50%; }
 .portrait-caption { display: none; }
+
+/* Home page intro: photo on the left, headline on the right */
+.intro { display: grid; grid-template-columns: 220px 1fr; gap: 2.5rem; align-items: center; margin: 0 0 4rem; }
+.intro-photo { width: 220px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 30%; border-radius: 16px; }
+.intro h1 { font-size: 2.35rem; font-weight: 400; line-height: 1.2; letter-spacing: -0.01em; margin: 0 0 0.9rem; }
+.intro-name { font-weight: 700; color: var(--teal); }
+.intro-sub { color: var(--muted); font-size: 0.95rem; line-height: 1.5; margin: 0 0 1.25rem; }
+.intro-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.btn { display: inline-block; padding: 0.45rem 1.1rem; border-radius: 999px; border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 0.95rem; transition: border-color 0.15s, background 0.15s; }
+.btn:hover { border-color: var(--ink); }
+.btn-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn-primary:hover { background: var(--teal); border-color: var(--teal); }
+@media (max-width: 600px) {
+  .intro { grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 3rem; }
+  .intro-photo { width: 180px; }
+  .intro h1 { font-size: 1.9rem; }
+}
 
 .two-col { display: block; }
 .two-col figure { margin: 2rem 0 0; max-width: 280px; }
@@ -62,6 +79,52 @@ figcaption { font-size: 0.9rem; color: var(--muted); margin-top: 0.5rem; }
 .legend { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 0.75rem; font-size: 0.85rem; color: var(--muted); }
 .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; background: var(--swatch); }
 .tooltip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 0.8rem; line-height: 1.4; padding: 0.45rem 0.65rem; border-radius: 4px; opacity: 0; max-width: 240px; }
+
+/* Travel map */
+.travel { margin-top: 3.5rem; }
+.travel h2 { margin-bottom: 0.5rem; }
+.travel-sub { color: var(--muted); margin: 0 0 1rem; font-size: 0.95rem; }
+.map-controls { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+.map-controls button { font: inherit; font-size: 0.85rem; padding: 0.3rem 0.8rem; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--muted); cursor: pointer; }
+.map-controls button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.map-controls button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.map-wrap { overflow: hidden; border: 1px solid var(--line); border-radius: 12px; }
+.map-wrap svg { display: block; width: 100%; height: auto; touch-action: manipulation; }
+.map-wrap .country { fill: var(--line); stroke: var(--bg); stroke-width: 0.5; transition: fill 0.15s; }
+.map-wrap .country:hover { fill: var(--gold); }
+.map-wrap .country.visited { fill: var(--teal); }
+.map-wrap .country.visited:hover { fill: var(--ink); }
+.map-wrap .city { fill: var(--ink); stroke: var(--bg); stroke-width: 0.5; }
+.map-wrap .home circle { fill: var(--bg); stroke: var(--ink); stroke-width: 1.5; cursor: default; }
+.legend-home::before { background: var(--bg) !important; border: 1.5px solid var(--ink); border-radius: 50% !important; box-sizing: border-box; }
+
+.map-wrap .country.visited, .map-wrap .city, .map-wrap .home circle { cursor: pointer; }
+
+/* Photo gallery under the map */
+.gallery { margin-top: 1rem; border: 1px solid var(--line); border-radius: 12px; padding: 0.75rem 0.75rem 0.5rem; }
+.gallery[hidden] { display: none; }
+.gallery-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.6rem; }
+.gallery-head h3 { margin: 0; font-size: 1rem; }
+.gallery-close { font: inherit; font-size: 1.4rem; line-height: 1; width: 2rem; height: 2rem; border: 0; border-radius: 50%; background: none; color: var(--muted); cursor: pointer; }
+.gallery-close:hover { background: var(--line); color: var(--ink); }
+.gallery-body { position: relative; }
+.gallery-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; border-radius: 8px; scrollbar-width: none; }
+.gallery-track::-webkit-scrollbar { display: none; }
+.gallery-track:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.gallery .slide { flex: 0 0 100%; margin: 0; scroll-snap-align: start; }
+.gallery .slide img { width: 100%; height: 340px; object-fit: contain; background: var(--line); border-radius: 8px; }
+.gallery .slide figcaption { text-align: center; }
+.gallery-empty { margin: 0; padding: 2.5rem 1rem; width: 100%; text-align: center; color: var(--muted); background: var(--line); border-radius: 8px; }
+.gallery-nav { position: absolute; top: 170px; transform: translateY(-50%); z-index: 1; width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 0; background: var(--bg); color: var(--ink); font-size: 1.5rem; line-height: 1; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+.gallery-nav.prev { left: 0.5rem; }
+.gallery-nav.next { right: 0.5rem; }
+.gallery-nav:disabled { opacity: 0.35; cursor: default; }
+.gallery-nav[hidden] { display: none; }
+.gallery-count { margin: 0.25rem 0 0; text-align: center; font-size: 0.8rem; color: var(--muted); min-height: 1.2em; }
+@media (max-width: 600px) {
+  .gallery .slide img { height: 260px; }
+  .gallery-nav { top: 130px; }
+}
 
 .contact { background: none; border: 0; }
 .contact-inner { max-width: 42rem; margin: 0 auto; padding: 2rem 1.5rem 3rem; border-top: 1px solid var(--line); }

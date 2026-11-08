@@ -14,30 +14,65 @@
       <ul>
         <li><a href="index.html" aria-current="page">About Me</a></li>
         <li><a href="projects.html">Projects</a></li>
+        <li><a href="files/samuel-yao-resume.pdf" target="_blank" rel="noopener">Resume</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
+    <section class="intro" aria-labelledby="intro-title">
+      <img class="intro-photo" src="images/me-full.jpg" alt="Samuel Yao in a suit at Northeastern" width="1067" height="1600">
+      <div class="intro-text">
+        <h1 id="intro-title"><span class="intro-name">Samuel Yao</span> is a finance and data science student who turns numbers into decisions.</h1>
+        <p class="intro-sub">Business Administration (Finance) &amp; Data Science @ Northeastern University &middot; Based in Boston &amp; Cupertino</p>
+        <div class="intro-actions">
+          <a class="btn btn-primary" href="projects.html">View Projects</a>
+          <a class="btn" href="files/samuel-yao-resume.pdf" target="_blank" rel="noopener">Resume</a>
+        </div>
+      </div>
+    </section>
+
     <div class="hero">
       <div class="prose">
-        <h1>About Me</h1>
+        <h2>About Me</h2>
 
-        <p>Hello! I'm a 3rd-year student at Northeastern University studying Data Science &amp; Business Administration with a focus in Finance. I grew up in Cupertino, CA, but recently spent an amazing year studying abroad in London, where I managed to explore over 13 countries along the way!</p>
+        <p>Hello! I'm a 3rd-year student at Northeastern University studying Data Science &amp; Business Administration with a focus in Finance. I grew up in Cupertino, CA, but recently spent an amazing year studying abroad in London, where I managed to explore 13 countries along the way!</p>
 
-        <p>This coming Spring, I'm excited to start as a Tax Analyst Co-op at Focus Financial Partners. Before this, I worked in consulting and product QA engineering, where I got to dive into problem-solving, streamlining processes, and crunching data. Long term, I'm interested in private equity and venture capital, especially real estate finance.</p>
+        <p>This coming Spring, I'm excited to start as a Tax Analyst Co-op at Focus Financial Partners. Before this, I worked in consulting and product QA engineering, where I got to dive into problem-solving, streamlining processes, and crunching data. Long term, I'm interested in working in FP&amp;A, wealth management, consulting, or data analytics.</p>
 
         <p>On campus, I'm involved with Case Consulting Group and Beta Alpha Psi, and I lead recruitment for AIQS. These have given me the chance to work on real client projects and meet people from all kinds of backgrounds. I've also spent time working in food service, at a ramen restaurant and as an assistant manager at a boba shop, which taught me a lot about staying calm during busy rushes and training new team members.</p>
 
-        <p>When I'm not studying or working, you can usually find me bouldering (I recently joined NU Rec Climbing for outdoor trips), checking out local cafes and restaurants, or relaxing with some anime and K-dramas. I also speak Mandarin and am always happy to chat about travel, food, or finance!</p>
+        <p>When I'm not studying or working, you can usually find me bouldering, checking out local cafes and restaurants (follow me on <a href="https://beliapp.co/app/samuelyao" target="_blank" rel="noopener">Beli</a>!), or relaxing with some anime and K-dramas. I also speak Mandarin and am always happy to chat about travel, food, or finance!</p>
       </div>
-
-      <figure>
-        <img class="portrait" src="images/me.jpg" alt="Portrait of Samuel Yao" width="260" height="260">
-        <figcaption class="portrait-caption">Boston, MA</figcaption>
-      </figure>
     </div>
+
+    <section class="travel" aria-labelledby="travel-title">
+      <h2 id="travel-title">Where I've Been</h2>
+      <p class="travel-sub"><span id="travel-count"></span> Hover for details, or click a highlighted country to see photos.</p>
+      <div class="map-controls" role="group" aria-label="Map view">
+        <button type="button" data-view="world" aria-pressed="true">World</button>
+        <button type="button" data-view="europe" aria-pressed="false">Europe</button>
+        <button type="button" data-view="asia" aria-pressed="false">Asia</button>
+      </div>
+      <div id="travel-map" class="chart-wrap map-wrap"></div>
+      <div id="gallery" class="gallery" hidden aria-live="polite">
+        <div class="gallery-head">
+          <h3 id="gallery-title"></h3>
+          <button type="button" class="gallery-close" aria-label="Close photos">&times;</button>
+        </div>
+        <div class="gallery-body">
+          <button type="button" class="gallery-nav prev" aria-label="Previous photo">&#8249;</button>
+          <div class="gallery-track" tabindex="0" aria-label="Photos"></div>
+          <button type="button" class="gallery-nav next" aria-label="Next photo">&#8250;</button>
+        </div>
+        <p class="gallery-count"></p>
+      </div>
+      <div class="legend">
+        <span style="--swatch: var(--teal)">Visited</span>
+        <span class="legend-home">Places I've lived</span>
+      </div>
+    </section>
   </main>
 
   <footer class="contact" id="contact">
@@ -50,6 +85,323 @@
       </ul>
     </div>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+  <script>
+    // ===== Edit this list to update the map =====
+    // "name" must match the map's spelling (e.g. "United States of America", "Czechia", "Bosnia and Herz.").
+    // "note" is optional and shows when someone hovers the country.
+    const visited = [
+      { name: "United States of America", note: "Home: grew up in Cupertino, studying in Boston" },
+      { name: "United Kingdom", note: "Study abroad year in London" },
+      { name: "China", note: "Beijing" },
+      { name: "South Korea", note: "Seoul and Busan" },
+      { name: "Hungary", note: "Budapest" },
+      { name: "Spain", note: "Mallorca" },
+      { name: "Greece", note: "Athens and Santorini" },
+      { name: "Germany", note: "Berlin and Munich" },
+      { name: "Switzerland", note: "Zurich" },
+      { name: "France", note: "Paris" },
+      { name: "Netherlands", note: "Amsterdam" },
+      { name: "Italy", note: "Milan" }
+    ];
+    // Cities I've visited, shown as small dots
+    const cities = [
+      { name: "Beijing", country: "China", coords: [116.40, 39.90] },
+      { name: "Budapest", country: "Hungary", coords: [19.04, 47.50] },
+      { name: "Mallorca", country: "Spain", coords: [2.65, 39.57] },
+      { name: "Athens", country: "Greece", coords: [23.73, 37.98] },
+      { name: "Santorini", country: "Greece", coords: [25.43, 36.39] },
+      { name: "Berlin", country: "Germany", coords: [13.40, 52.52] },
+      { name: "Munich", country: "Germany", coords: [11.58, 48.14] },
+      { name: "Zurich", country: "Switzerland", coords: [8.54, 47.37] },
+      { name: "Paris", country: "France", coords: [2.35, 48.86] },
+      { name: "Amsterdam", country: "Netherlands", coords: [4.90, 52.37] },
+      { name: "Milan", country: "Italy", coords: [9.19, 45.46] },
+      { name: "San Francisco", country: "United States of America", coords: [-122.42, 37.77] },
+      { name: "Seoul", country: "South Korea", coords: [126.98, 37.57] },
+      { name: "Busan", country: "South Korea", coords: [129.08, 35.18] },
+      { name: "Montreal", country: "Canada", coords: [-73.57, 45.50] },
+      { name: "Quebec City", country: "Canada", coords: [-71.21, 46.81] }
+    ];
+    // Countries where only one region is shaded instead of the whole country
+    const regions = [
+      { country: "Canada", name: "Quebec", file: "data/quebec.json", note: "Montreal and Quebec City" }
+    ];
+    // Places I've lived, shown as larger hollow dots
+    const homes = [
+      { name: "Cupertino, CA", country: "United States of America", coords: [-122.03, 37.32] },
+      { name: "Boston, MA", country: "United States of America", coords: [-71.06, 42.36], note: "I go to university here (Northeastern)" },
+      { name: "London, UK", country: "United Kingdom", coords: [-0.13, 51.51] }
+    ];
+    // Photos shown when someone clicks a country (or one of its city dots).
+    // Put image files in images/travel/ and add them here. "place" should match a city name
+    // above so clicking that city's dot jumps straight to its photos.
+    const T = "images/travel/";
+    const photos = {
+      "United Kingdom": [
+        { src: T + "london-regent-street-lights.jpg", place: "London, UK", caption: "Under the Regent Street Christmas lights" },
+        { src: T + "london-battersea-ice-skating.jpg", place: "London, UK", caption: "Ice skating at Battersea Power Station" },
+        { src: T + "london-wembley-way.jpg", place: "London, UK", caption: "Walking up to Wembley Stadium" },
+        { src: T + "london-chinatown-lanterns.jpg", place: "London, UK", caption: "Chinatown under the red lanterns" }
+      ],
+      "France": [
+        { src: T + "paris-eiffel-tower-night.jpg", place: "Paris", caption: "The Eiffel Tower lit up at night" },
+        { src: T + "paris-louvre.jpg", place: "Paris", caption: "The Louvre pyramid" },
+        { src: T + "paris-stussy.jpg", place: "Paris", caption: "Stussy Paris" }
+      ],
+      "Italy": [
+        { src: T + "milan-duomo-night.jpg", place: "Milan", caption: "The Duomo at night" }
+      ],
+      "Switzerland": [
+        { src: T + "zurich-alps-lake.jpg", place: "Zurich", caption: "Snowy Alps over the lake" },
+        { src: T + "zurich-friends-christmas-trees.jpg", place: "Zurich", caption: "Friends by the Christmas trees" }
+      ],
+      "Germany": [
+        { src: T + "berlin-brandenburg-gate.jpg", place: "Berlin", caption: "Brandenburg Gate" }
+      ],
+      "Netherlands": [
+        { src: T + "amsterdam-canal.jpg", place: "Amsterdam", caption: "Canal on a sunny day" },
+        { src: T + "amsterdam-stroopwafel.jpg", place: "Amsterdam", caption: "Stroopwafel with chocolate and strawberries" },
+        { src: T + "amsterdam-centraal-station.jpg", place: "Amsterdam", caption: "Outside Amsterdam Centraal" }
+      ],
+      "Hungary": [
+        { src: T + "budapest-danube-view.jpg", place: "Budapest", caption: "Sunset over the Danube" }
+      ],
+      "Greece": [
+        { src: T + "athens-acropolis.jpg", place: "Athens", caption: "The Erechtheion on the Acropolis" },
+        { src: T + "santorini-sunset.jpg", place: "Santorini", caption: "Sunset over the caldera" },
+        { src: T + "santorini-white-houses.jpg", place: "Santorini", caption: "Santorini's white cliffside houses" }
+      ],
+      "Spain": [
+        { src: T + "mallorca-boat-trip.jpg", place: "Mallorca", caption: "Boat trip with friends" }
+      ],
+      "South Korea": [
+        { src: T + "seoul-hanbok-palace.jpg", place: "Seoul", caption: "Wearing a hanbok at the palace" },
+        { src: T + "seoul-gyeongbokgung.jpg", place: "Seoul", caption: "Gyeongbokgung Palace" },
+        { src: T + "seoul-hanok-village.jpg", place: "Seoul", caption: "Hanok village rooftops" },
+        { src: T + "busan-haeundae-beach.jpg", place: "Busan", caption: "Haeundae Beach skyline" }
+      ],
+      "United States of America": [
+        { src: T + "boston-halloween-party.jpg", place: "Boston, MA", caption: "Halloween party" },
+        { src: T + "boston-christmas-party.jpg", place: "Boston, MA", caption: "Christmas party with friends" },
+        { src: T + "san-francisco-golden-gate.jpg", place: "San Francisco", caption: "Golden Gate Bridge at night" }
+      ]
+    };
+    // =============================================
+
+    (async function () {
+      const wrap = document.getElementById("travel-map");
+      const notes = new Map(visited.map(d => [d.name, d.note || ""]));
+      document.getElementById("travel-count").textContent =
+        `${visited.length + regions.length} countries so far.`;
+
+      let world;
+      try {
+        world = await d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json");
+      } catch (e) {
+        wrap.textContent = "The map couldn't load right now.";
+        return;
+      }
+      const countries = topojson.feature(world, world.objects.countries).features
+        .filter(f => f.properties.name !== "Antarctica");
+
+      // Only shade the main part of these countries, not far-off territories
+      // (French Guiana, Canary Islands, Dutch Caribbean, Alaska, Hawaii).
+      // Box is [west, east, south, north] in degrees.
+      const europe = [-12, 45, 35, 72];
+      const mainland = {
+        "France": europe, "Spain": europe, "Netherlands": europe,
+        "United States of America": [-125, -66, 24, 50]
+      };
+      const overseas = [];
+      countries.forEach(f => {
+        const box = mainland[f.properties.name];
+        if (!box || f.geometry.type !== "MultiPolygon") return;
+        const [w, e, s, n] = box;
+        const inEurope = [], outside = [];
+        f.geometry.coordinates.forEach(poly => {
+          const [lon, lat] = d3.geoCentroid({ type: "Polygon", coordinates: poly });
+          (lon > w && lon < e && lat > s && lat < n ? inEurope : outside).push(poly);
+        });
+        f.geometry.coordinates = inEurope;
+        // Keep the overseas land on the map, just not shaded as visited
+        if (outside.length) overseas.push({
+          type: "Feature",
+          properties: { name: f.properties.name + " (overseas)" },
+          geometry: { type: "MultiPolygon", coordinates: outside }
+        });
+      });
+      countries.push(...overseas);
+
+      const width = 960, height = 500;
+      const projection = d3.geoNaturalEarth1().fitSize([width, height], { type: "FeatureCollection", features: countries });
+      const path = d3.geoPath(projection);
+
+      const svg = d3.select(wrap).append("svg")
+        .attr("viewBox", [0, 0, width, height])
+        .attr("role", "img")
+        .attr("aria-label", "World map of countries visited: " + visited.map(d => d.name).join(", "));
+      const g = svg.append("g");
+
+      const tip = d3.select(wrap).append("div").attr("class", "tooltip");
+      const show = (event, html) => {
+        const [x, y] = d3.pointer(event, wrap);
+        tip.html(html).style("opacity", 1)
+          .style("left", Math.min(x + 12, wrap.clientWidth - 200) + "px")
+          .style("top", (y + 12) + "px");
+      };
+      const hide = () => tip.style("opacity", 0);
+
+      g.selectAll("path.country")
+        .data(countries)
+        .join("path")
+        .attr("class", d => "country" + (notes.has(d.properties.name) ? " visited" : ""))
+        .attr("d", path)
+        .on("pointermove", (event, d) => {
+          const n = d.properties.name;
+          const label = n.replace("United States of America", "United States");
+          show(event, notes.has(n)
+            ? `<strong>${label}</strong>${notes.get(n) ? "<br>" + notes.get(n) : ""}`
+            : label);
+        })
+        .on("pointerleave", hide)
+        .on("click", (event, d) => { if (notes.has(d.properties.name)) openGallery(d.properties.name); });
+
+      // Shaded regions (e.g. just Quebec instead of all of Canada)
+      for (const r of regions) {
+        try {
+          const feature = await d3.json(r.file);
+          // Make sure each ring winds the way D3 expects, or it would fill the whole globe
+          feature.geometry.coordinates.forEach(poly => {
+            if (d3.geoArea({ type: "Polygon", coordinates: poly }) > 2 * Math.PI) poly.forEach(ring => ring.reverse());
+          });
+          g.append("path")
+            .datum(feature)
+            .attr("class", "country visited region")
+            .attr("d", path)
+            .on("pointermove", event => show(event, `<strong>${r.name}, ${r.country}</strong><br>${r.note}`))
+            .on("pointerleave", hide)
+            .on("click", () => openGallery(r.country));
+        } catch (e) { /* region outline failed to load; skip it */ }
+      }
+
+      const cityDots = g.selectAll("circle.city")
+        .data(cities)
+        .join("circle")
+        .attr("class", "city")
+        .attr("r", 2.5)
+        .attr("transform", d => `translate(${projection(d.coords)})`)
+        .on("pointermove", (event, d) => show(event, `<strong>${d.name}</strong>`))
+        .on("pointerleave", hide)
+        .on("click", (event, d) => openGallery(d.country, d.name));
+
+      const dots = g.selectAll("g.home")
+        .data(homes)
+        .join("g")
+        .attr("class", "home")
+        .attr("transform", d => `translate(${projection(d.coords)})`)
+        .on("pointermove", (event, d) => show(event, `<strong>${d.name}</strong>${d.note ? "<br>" + d.note : ""}`))
+        .on("pointerleave", hide)
+        .on("click", (event, d) => openGallery(d.country, d.name));
+      dots.append("circle").attr("r", 4.5);
+
+      // ----- Photo gallery -----
+      const gallery = document.getElementById("gallery");
+      const track = gallery.querySelector(".gallery-track");
+      const countEl = gallery.querySelector(".gallery-count");
+      const prevBtn = gallery.querySelector(".prev"), nextBtn = gallery.querySelector(".next");
+      const nice = n => n.replace("United States of America", "United States");
+
+      function updateCount() {
+        const slides = track.querySelectorAll(".slide");
+        if (!slides.length) { countEl.textContent = ""; return; }
+        const i = Math.round(track.scrollLeft / track.clientWidth);
+        countEl.textContent = `${i + 1} / ${slides.length}`;
+        prevBtn.disabled = i <= 0;
+        nextBtn.disabled = i >= slides.length - 1;
+      }
+
+      function openGallery(country, place) {
+        hide();
+        const list = photos[country] || [];
+        document.getElementById("gallery-title").textContent = place
+          ? `${place} · ${nice(country)}` : nice(country);
+        track.innerHTML = "";
+        if (!list.length) {
+          track.innerHTML = `<p class="gallery-empty">Photos from ${place || nice(country)} coming soon.</p>`;
+        } else {
+          list.forEach(p => {
+            const fig = document.createElement("figure");
+            fig.className = "slide";
+            const img = document.createElement("img");
+            img.src = p.src;
+            img.alt = p.caption || p.place || "";
+            img.loading = "lazy";
+            fig.appendChild(img);
+            if (p.caption) {
+              const cap = document.createElement("figcaption");
+              cap.textContent = p.caption;
+              fig.appendChild(cap);
+            }
+            track.appendChild(fig);
+          });
+        }
+        prevBtn.hidden = nextBtn.hidden = list.length < 2;
+        gallery.hidden = false;
+        // Jump to the first photo from the clicked city, if any
+        const start = Math.max(0, list.findIndex(p => p.place === place));
+        track.scrollTo({ left: start * track.clientWidth, behavior: "instant" });
+        updateCount();
+        gallery.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      const step = dir => track.scrollBy({ left: dir * track.clientWidth, behavior: "smooth" });
+      prevBtn.addEventListener("click", () => step(-1));
+      nextBtn.addEventListener("click", () => step(1));
+      track.addEventListener("scroll", () => requestAnimationFrame(updateCount));
+      track.addEventListener("keydown", e => {
+        if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
+        if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
+      });
+      gallery.querySelector(".gallery-close").addEventListener("click", () => { gallery.hidden = true; });
+
+      // World / Europe toggle (zooms the map)
+      // Zoom to a box given as [west, north] and [east, south] in degrees
+      const zoomTo = (nw, se) => {
+        const [[x0, y0], [x1, y1]] = [projection(nw), projection(se)];
+        const k = Math.min(width / (x1 - x0), height / (y1 - y0)) * 0.95;
+        return d3.zoomIdentity.translate(width / 2, height / 2).scale(k)
+          .translate(-(x0 + x1) / 2, -(y0 + y1) / 2);
+      };
+      const views = {
+        world: d3.zoomIdentity,
+        europe: zoomTo([-12, 62], [32, 34]),
+        asia: zoomTo([75, 54], [140, 18])
+      };
+      let current = d3.zoomIdentity;
+      function setView(name) {
+        const t = views[name];
+        d3.transition().duration(750).tween("zoom", () => {
+          const i = d3.interpolate(
+            [current.x, current.y, current.k], [t.x, t.y, t.k]);
+          return s => {
+            const [x, y, k] = i(s);
+            current = d3.zoomIdentity.translate(x, y).scale(k);
+            g.attr("transform", current);
+            g.selectAll("path.country").attr("stroke-width", 0.5 / k);
+            cityDots.attr("r", 2.5 / Math.sqrt(k));
+            dots.select("circle").attr("r", 4.5 / Math.sqrt(k)).attr("stroke-width", 1.5 / Math.sqrt(k));
+          };
+        });
+        document.querySelectorAll(".map-controls button").forEach(b =>
+          b.setAttribute("aria-pressed", b.dataset.view === name));
+      }
+      document.querySelectorAll(".map-controls button").forEach(b =>
+        b.addEventListener("click", () => setView(b.dataset.view)));
+    })();
+  </script>
 
 </body>
 </html>

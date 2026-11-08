@@ -32,6 +32,30 @@
       object-fit: cover;
       border-radius: 8px;
     }
+    .card-year {
+      font-size: 0.8rem !important;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin: 0.75rem 0.4rem 0 !important;
+    }
+    .card-year + h4 { margin-top: 0.1rem !important; }
+    .card { scroll-margin-top: 1.5rem; }
+    .card.flash { box-shadow: 0 0 0 2px var(--teal); }
+    /* Project timeline */
+    .timeline-section { margin-top: 3rem; }
+    .timeline-section h3 { margin-top: 0; }
+    .timeline-section > p { color: var(--muted); font-size: 0.95rem; margin: 0 0 0.5rem; }
+    #timeline-wrap { overflow: visible; }
+    #timeline svg { width: 100%; height: auto; overflow: visible; }
+    #timeline .row-label { font-size: 14px; }
+    #timeline .axis text { font-size: 12px; }
+    #timeline .item { cursor: pointer; }
+    #timeline .item:focus { outline: none; }
+    #timeline .item:focus-visible .mark { stroke: var(--ink); stroke-width: 2; }
+    #timeline .item:hover .mark { filter: brightness(1.15); }
+    #timeline .lane-line { stroke: var(--line); }
+    #timeline .nu-band { fill: var(--line); opacity: 0.45; }
+    #timeline .nu-label { font-size: 11px; fill: var(--muted); }
     .card h4 {
       font-size: 1.1rem;
       margin: 0.75rem 0.4rem 0.2rem;
@@ -57,13 +81,19 @@
       background: var(--line);
       color: var(--ink);
     }
+    .card-link {
+      display: inline-block;
+      margin: 0.75rem 0.4rem 0;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .closer { margin-top: 3rem; }
     .closer p { margin: 0 0 1.1rem; }
     .closer strong { color: var(--ink); }
     @media (max-width: 600px) {
       .cards { grid-template-columns: 1fr; }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 </head>
 <body>
 
@@ -73,6 +103,7 @@
       <ul>
         <li><a href="index.html">About Me</a></li>
         <li><a href="projects.html" aria-current="page">Projects</a></li>
+        <li><a href="files/samuel-yao-resume.pdf" target="_blank" rel="noopener">Resume</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
@@ -80,51 +111,65 @@
 
   <main>
     <h2>Projects</h2>
-    <p>Here are a few projects I've worked on across classes, clubs, and consulting work. Some are technical and some are more business-focused, but each one started with a real question and ended with something people could actually use. Together they show the mix of finance and data science I'm going for. The cards give a quick summary, and there's more detail on each one further down.</p>
+    <p>Here are some of the projects I have worked on since high school. It is a mix of consulting projects for FBLA and DECA, where we worked with companies over a year to write growth and development business plans, alongside data science projects using tools like Python, MySQL, and Docker. The cards give a quick summary, with more detail on each one further down.</p>
 
     <!-- To use your own screenshots: put them in images/ and change each img src (e.g. images/fithub.png) -->
     <ul class="cards">
-      <li class="card">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmN2M5YjYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmM2E2YjgiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0idXJsKCNnKSIvPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNDAgMjgpIj4KPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIyNDQiIHJ4PSIxOCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZTdkN2Q5Ii8+CjxyZWN0IHg9IjEyIiB5PSIyMCIgd2lkdGg9Ijk2IiBoZWlnaHQ9IjE0IiByeD0iNyIgZmlsbD0iI2YxZWVmMCIvPgo8cmVjdCB4PSIxMiIgeT0iNDQiIHdpZHRoPSI0NCIgaGVpZ2h0PSI1OCIgcng9IjYiIGZpbGw9IiNjOWQ4ZjAiLz48cmVjdCB4PSI2NCIgeT0iNDQiIHdpZHRoPSI0NCIgaGVpZ2h0PSI1OCIgcng9IjYiIGZpbGw9IiNmNGQ1OGQiLz4KPHJlY3QgeD0iMTIiIHk9IjExMCIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjU4IiByeD0iNiIgZmlsbD0iI2I5ZGVjOSIvPjxyZWN0IHg9IjY0IiB5PSIxMTAiIHdpZHRoPSI0NCIgaGVpZ2h0PSI1OCIgcng9IjYiIGZpbGw9IiNlOWI4YzkiLz4KPHJlY3QgeD0iMTIiIHk9IjE3NiIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjU4IiByeD0iNiIgZmlsbD0iI2Q3YzllZiIvPjxyZWN0IHg9IjY0IiB5PSIxNzYiIHdpZHRoPSI0NCIgaGVpZ2h0PSI1OCIgcng9IjYiIGZpbGw9IiNjOWUzZWYiLz4KPHBhdGggZD0iTTI2IDYwIGw4IC02IGg4IGw4IDYgbC00IDggaC0yIHYyNCBoLTE2IHYtMjQgaC0yIHoiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44NSIvPgo8cGF0aCBkPSJNNzggMTI2IGw4IC02IGg4IGw4IDYgbC00IDggaC0yIHYyNCBoLTE2IHYtMjQgaC0yIHoiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44NSIvPgo8L2c+PC9zdmc+" alt="Mockup of a clothing marketplace app showing a grid of listings">
+      <li class="card" id="fithub">
+        <img src="images/fithub.svg" alt="FitHub logo">
+        <p class="card-year">2025</p>
         <h4>FitHub</h4>
         <p>A peer-to-peer clothing marketplace built with a team of five</p>
         <ul class="tags"><li>Python</li><li>MySQL</li><li>Team</li></ul>
+        <a class="card-link" href="https://github.com/londonjones4189/FitHub" target="_blank" rel="noopener">View on GitHub &rarr;</a>
+        <a class="card-link" href="https://www.youtube.com/watch?v=BqDdCF2K0Co" target="_blank" rel="noopener">Watch the demo &rarr;</a>
       </li>
-      <li class="card">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNkOWQ0ZjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNhOWMxZWYiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0idXJsKCNnKSIvPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMTggMjYpIHJvdGF0ZSgtNCkiPgo8cmVjdCB3aWR0aD0iMTY0IiBoZWlnaHQ9IjIyNiIgcng9IjYiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2Q2ZDllOCIvPgo8cmVjdCB4PSIxOCIgeT0iMjAiIHdpZHRoPSI5NiIgaGVpZ2h0PSIxMCIgcng9IjMiIGZpbGw9IiMzYjRhNmIiLz4KPHJlY3QgeD0iMTgiIHk9IjQwIiB3aWR0aD0iMTI4IiBoZWlnaHQ9IjUiIHJ4PSIyIiBmaWxsPSIjY2ZkNWUzIi8+PHJlY3QgeD0iMTgiIHk9IjUyIiB3aWR0aD0iMTIwIiBoZWlnaHQ9IjUiIHJ4PSIyIiBmaWxsPSIjY2ZkNWUzIi8+PHJlY3QgeD0iMTgiIHk9IjY0IiB3aWR0aD0iMTI4IiBoZWlnaHQ9IjUiIHJ4PSIyIiBmaWxsPSIjY2ZkNWUzIi8+CjxyZWN0IHg9IjE4IiB5PSI4NCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSI2MiIgcng9IjQiIGZpbGw9IiNmMmY0ZmEiLz4KPHJlY3QgeD0iMzAiIHk9IjExOCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjIwIiBmaWxsPSIjN2M4ZmQxIi8+PHJlY3QgeD0iNTQiIHk9IjEwNCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjM0IiBmaWxsPSIjN2M4ZmQxIi8+PHJlY3QgeD0iNzgiIHk9Ijk2IiB3aWR0aD0iMTYiIGhlaWdodD0iNDIiIGZpbGw9IiM0ZjY3YzIiLz48cmVjdCB4PSIxMDIiIHk9IjExMCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjI4IiBmaWxsPSIjN2M4ZmQxIi8+CjxyZWN0IHg9IjE4IiB5PSIxNjAiIHdpZHRoPSIxMjgiIGhlaWdodD0iNSIgcng9IjIiIGZpbGw9IiNjZmQ1ZTMiLz48cmVjdCB4PSIxOCIgeT0iMTcyIiB3aWR0aD0iMTEyIiBoZWlnaHQ9IjUiIHJ4PSIyIiBmaWxsPSIjY2ZkNWUzIi8+PHJlY3QgeD0iMTgiIHk9IjE4NCIgd2lkdGg9IjEyOCIgaGVpZ2h0PSI1IiByeD0iMiIgZmlsbD0iI2NmZDVlMyIvPjxyZWN0IHg9IjE4IiB5PSIxOTYiIHdpZHRoPSI4MCIgaGVpZ2h0PSI1IiByeD0iMiIgZmlsbD0iI2NmZDVlMyIvPgo8L2c+PC9zdmc+" alt="Illustration of a written report with a bar chart">
-        <h4>Kalshi Paper</h4>
+      <li class="card" id="kalshi">
+        <img src="images/kalshi-cover.jpg" alt="Cover of the Project Futures report for Kalshi">
+        <p class="card-year">2022&ndash;2023</p>
+        <h4>Kalshi: Project Future</h4>
         <p>A consulting paper built around a cost-benefit analysis</p>
         <ul class="tags"><li>Consulting</li><li>Client</li><li>Research</li></ul>
+        <a class="card-link" href="files/kalshi-project-futures.pdf" target="_blank" rel="noopener">Read the report (PDF) &rarr;</a>
       </li>
-      <li class="card">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNjZmU2ZDgiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM5ZmNmYzQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0idXJsKCNnKSIvPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3MCA0MCkiPgo8cmVjdCB3aWR0aD0iMjYwIiBoZWlnaHQ9IjIwMCIgcng9IjgiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2QzZTJkYyIvPgo8cmVjdCB4PSIxOCIgeT0iMTgiIHdpZHRoPSIxMTAiIGhlaWdodD0iMTAiIHJ4PSIzIiBmaWxsPSIjMmY1ZDU1Ii8+CjxyZWN0IHg9IjE4IiB5PSIzNiIgd2lkdGg9IjcwIiBoZWlnaHQ9IjYiIHJ4PSIzIiBmaWxsPSIjYzlkYmQ1Ii8+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIwIDYwKSIgZmlsbD0iIzlmY2ZjNCI+CjxyZWN0IHg9IjAiIHk9IjQwIiB3aWR0aD0iMzQiIGhlaWdodD0iNzYiIHJ4PSIyIiBmaWxsPSIjN2ZiOGFiIi8+PHJlY3QgeD0iNDAiIHk9IjEwIiB3aWR0aD0iNDAiIGhlaWdodD0iMTA2IiByeD0iMiIgZmlsbD0iIzRmOTY4NiIvPjxyZWN0IHg9Ijg2IiB5PSI1NiIgd2lkdGg9IjI2IiBoZWlnaHQ9IjYwIiByeD0iMiIgZmlsbD0iIzdmYjhhYiIvPgo8ZyBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuOCI+PHJlY3QgeD0iNiIgeT0iNTAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiLz48cmVjdCB4PSIyMCIgeT0iNTAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiLz48cmVjdCB4PSI2IiB5PSI2NiIgd2lkdGg9IjYiIGhlaWdodD0iNiIvPjxyZWN0IHg9IjIwIiB5PSI2NiIgd2lkdGg9IjYiIGhlaWdodD0iNiIvPjxyZWN0IHg9IjQ4IiB5PSIyMiIgd2lkdGg9IjciIGhlaWdodD0iNyIvPjxyZWN0IHg9IjY0IiB5PSIyMiIgd2lkdGg9IjciIGhlaWdodD0iNyIvPjxyZWN0IHg9IjQ4IiB5PSI0MCIgd2lkdGg9IjciIGhlaWdodD0iNyIvPjxyZWN0IHg9IjY0IiB5PSI0MCIgd2lkdGg9IjciIGhlaWdodD0iNyIvPjxyZWN0IHg9IjQ4IiB5PSI1OCIgd2lkdGg9IjciIGhlaWdodD0iNyIvPjxyZWN0IHg9IjY0IiB5PSI1OCIgd2lkdGg9IjciIGhlaWdodD0iNyIvPjwvZz4KPC9nPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNTAgNjApIj4KPGNpcmNsZSBjeD0iNDUiIGN5PSI1NSIgcj0iNDAiIGZpbGw9IiNlNmYxZWQiLz4KPHBhdGggZD0iTTQ1IDU1IEw0NSAxNSBBNDAgNDAgMCAwIDEgODMgNjcgWiIgZmlsbD0iIzRmOTY4NiIvPjxwYXRoIGQ9Ik00NSA1NSBMODMgNjcgQTQwIDQwIDAgMCAxIDIwIDg2IFoiIGZpbGw9IiM3ZmI4YWIiLz4KPHJlY3QgeD0iMCIgeT0iMTEwIiB3aWR0aD0iOTAiIGhlaWdodD0iNiIgcng9IjMiIGZpbGw9IiNjOWRiZDUiLz48cmVjdCB4PSIwIiB5PSIxMjIiIHdpZHRoPSI3MCIgaGVpZ2h0PSI2IiByeD0iMyIgZmlsbD0iI2M5ZGJkNSIvPgo8L2c+PC9nPjwvc3ZnPg==" alt="Illustration of a real estate report with buildings and charts">
+      <li class="card" id="manu">
+        <img src="images/manu-cover.jpg" alt="Cover of the Manu Real Estate operations research report">
+        <p class="card-year">2023</p>
         <h4>Manu Real Estate Report</h4>
         <p>Operational analysis and strategy for a real estate firm</p>
         <ul class="tags"><li>Real Estate</li><li>Client</li><li>Strategy</li></ul>
+        <a class="card-link" href="files/manu-real-estate-report.pdf" target="_blank" rel="noopener">Read the report (PDF) &rarr;</a>
       </li>
-      <li class="card">
+      <li class="card" id="stocks">
         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMyMjMwNmIiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM1YTdmZTAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0idXJsKCNnKSIvPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3MCA1MCkiPgo8cmVjdCB4PSIyMCIgeT0iMCIgd2lkdGg9IjIyMCIgaGVpZ2h0PSIxNTAiIHJ4PSI4IiBmaWxsPSIjZjRmNmZiIi8+CjxyZWN0IHg9IjAiIHk9IjE1MCIgd2lkdGg9IjI2MCIgaGVpZ2h0PSIxMiIgcng9IjYiIGZpbGw9IiNkOGRlZWMiLz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzYgMTgpIj4KPHJlY3Qgd2lkdGg9IjE4OCIgaGVpZ2h0PSIxMTQiIGZpbGw9IiNmZmYiLz4KPGcgc3Ryb2tlPSIjZTZlOWYyIj48bGluZSB4MT0iMCIgeTE9IjI4IiB4Mj0iMTg4IiB5Mj0iMjgiLz48bGluZSB4MT0iMCIgeTE9IjU3IiB4Mj0iMTg4IiB5Mj0iNTciLz48bGluZSB4MT0iMCIgeTE9Ijg2IiB4Mj0iMTg4IiB5Mj0iODYiLz48L2c+Cjxwb2x5bGluZSBwb2ludHM9IjYsOTYgMjYsODQgNDQsOTAgNjIsNzAgODAsNzQgOTgsNTIgMTE2LDYwIDEzNCwzOCAxNTIsNDQgMTcwLDIyIDE4NCwyNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMmZhMzZiIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPHBvbHlsaW5lIHBvaW50cz0iNiw3MCAzMCw3NCA1NCw2NiA3OCw3MiAxMDIsNjQgMTI2LDY4IDE1MCw2MCAxODQsNjIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzVhN2ZlMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI1IDQiLz4KPC9nPjwvZz48L3N2Zz4=" alt="Illustration of a laptop showing a stock price line chart">
+        <p class="card-year">2026</p>
         <h4>Stock Data Pipeline</h4>
         <p>Pulling stock and economic data into one place for DS 3500</p>
         <ul class="tags"><li>Python</li><li>Data Science</li><li>Class</li></ul>
+        <a class="card-link" href="https://github.com/balding947/DS3500-Project" target="_blank" rel="noopener">View on GitHub &rarr;</a>
       </li>
     </ul>
 
-    <h3>A closer look</h3>
+    <section class="timeline-section" aria-labelledby="timeline-title">
+      <h3 id="timeline-title">Project Timeline</h3>
+      <p>From high school business competitions to college data projects. Hover over a project for details, or click it to jump to its card.</p>
+      <div class="chart-wrap" id="timeline-wrap">
+        <div id="timeline"></div>
+        <div class="tooltip" id="timeline-tip"></div>
+      </div>
+      <div class="legend">
+        <span style="--swatch: var(--gold)">Consulting (FBLA / DECA)</span>
+        <span style="--swatch: var(--teal)">Data science</span>
+      </div>
+    </section>
+
     <div class="closer">
-      <p><strong>FitHub</strong> lets people buy and sell clothing with each other. Our team of five built it with Python, Flask, Streamlit, and MySQL. I designed the database schema and the API layer, which let users search listings by size, category, and style preferences at the same time.</p>
-      <p><strong>Kalshi Paper.</strong> As a business consultant for Kalshi, I put together a paper that used a cost-benefit analysis to turn an open question into a clear recommendation.</p>
-      <p><strong>Manu Real Estate Report.</strong> During my business advisory internship at Manu Real Estate, I wrote a report analyzing the firm's operations, with strategic planning across five areas and a focus on improving profitability.</p>
-      <p><strong>Stock Data Pipeline.</strong> For DS 3500, I built a pipeline that pulls stock and economic data from Alpha Vantage and FRED. Each source formatted things differently, so a lot of the work was lining the data up and handling gaps without the pipeline breaking.</p>
+      <p><strong>FitHub</strong> is a peer-to-peer marketplace that lets people buy and sell clothing with each other. Our team of five built it with Python, Flask, Streamlit, and MySQL. I designed the database schema and the API layer, which let users search listings by size, category, and style preferences at the same time. <a href="https://github.com/londonjones4189/FitHub" target="_blank" rel="noopener">See the code on GitHub</a> or <a href="https://www.youtube.com/watch?v=BqDdCF2K0Co" target="_blank" rel="noopener">watch the demo</a>.</p>
+      <p><strong>Kalshi.</strong> We started a project called Project Future, which analyzed Kalshi&rsquo;s current business strategies. We also ran a multi-step marketing campaign and a widget competition for them. <a href="files/kalshi-project-futures.pdf" target="_blank" rel="noopener">Read the full report (PDF)</a>.</p>
+      <p><strong>Manu Real Estate Report</strong> is an analysis of Manu Real Estate&rsquo;s current operating strategies. We looked at how the company runs today and helped identify areas where it could grow within its existing operations. The findings and recommendations are laid out in the full report. <a href="files/manu-real-estate-report.pdf" target="_blank" rel="noopener">Read the full report (PDF)</a>.</p>
+      <p><strong>Stock Data Pipeline</strong> is an interactive dashboard that tracks 10 major stocks, including Apple, NVIDIA, Tesla, and JPMorgan, using data pulled from Alpha Vantage and FRED. We built it for DS 3500 with four views: an overview that compares how every stock performed from the same starting point, a drill-down with candlestick prices, trading volume, and sentiment for one stock at a time, an animated risk vs. return chart, and a rolling volatility chart. Users can filter by date range, ticker, and trading volume, or change the volatility window to see how risk shifts over time. <a href="https://github.com/balding947/DS3500-Project" target="_blank" rel="noopener">See the code on GitHub</a>.</p>
     </div>
 
-    <h3>Skills by project</h3>
-    <p>Each dot marks a skill a project used. Hover over a project to see more.</p>
-    <div class="chart-wrap">
-      <div id="skills-chart"></div>
-      <div class="tooltip" id="tooltip"></div>
-      <div class="legend" id="legend"></div>
-    </div>
   </main>
 
   <footer class="contact" id="contact">
@@ -138,105 +183,117 @@
     </div>
   </footer>
 
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
   <script>
-    // ---- Data: edit this to change projects or skills ----
-    const skills = ["Python", "SQL", "Web apps", "Financial data", "Research", "Strategy", "Client work"];
-
-    const projects = [
-      { name: "FitHub", type: "Technical", detail: "Clothing marketplace, Flask + MySQL", uses: ["Python", "SQL", "Web apps"] },
-      { name: "Stock Data Pipeline", type: "Technical", detail: "Alpha Vantage + FRED data, DS 3500", uses: ["Python", "Financial data"] },
-      { name: "Kalshi Paper", type: "Consulting", detail: "Cost-benefit analysis and recommendation", uses: ["Research", "Strategy", "Client work"] },
-      { name: "Manu Real Estate", type: "Consulting", detail: "Operations and strategy report", uses: ["Research", "Strategy", "Client work"] }
+    // ===== Edit this list to update the timeline =====
+    const timeline = [
+      { name: "Kalshi: Project Future", id: "kalshi", type: "Consulting", start: "2022-09", end: "2023-03",
+        label: "2022&ndash;2023", detail: "FBLA Partnership with Business project" },
+      { name: "Manu Real Estate Report", id: "manu", type: "Consulting", start: "2023-03",
+        label: "2023", detail: "DECA operations research report" },
+      { name: "FitHub", id: "fithub", type: "Data science", start: "2025-06",
+        label: "2025", detail: "Clothing marketplace built with a team of five" },
+      { name: "Stock Data Pipeline", id: "stocks", type: "Data science", start: "2026-06",
+        label: "2026", detail: "Interactive stock dashboard for DS 3500" }
     ];
+    // ==================================================
 
-    // Colors come from style.css so dark mode works
-    const css = getComputedStyle(document.documentElement);
-    const colors = {
-      Technical: css.getPropertyValue("--teal").trim(),
-      Consulting: css.getPropertyValue("--gold").trim()
-    };
+    (function () {
+      const wrap = document.getElementById("timeline-wrap");
+      const tip = d3.select("#timeline-tip");
+      const parse = d3.timeParse("%Y-%m");
+      const css = getComputedStyle(document.documentElement);
+      const color = t => css.getPropertyValue(t === "Consulting" ? "--gold" : "--teal").trim();
 
-    const tooltip = d3.select("#tooltip");
+      const width = 520, rowH = 44;
+      const margin = { top: 34, right: 24, bottom: 34, left: 24 };
+      const height = margin.top + margin.bottom + rowH * timeline.length;
 
-    function draw() {
-      const container = d3.select("#skills-chart");
-      container.selectAll("*").remove();
+      const x = d3.scaleTime()
+        .domain([parse("2022-01"), parse("2027-01")])
+        .range([margin.left, width - margin.right]);
 
-      const margin = { top: 90, right: 20, bottom: 10, left: 160 };
-      const width = Math.max(560, container.node().clientWidth);
-      const rowH = 44;
-      const height = margin.top + margin.bottom + rowH * projects.length;
-
-      const svg = container.append("svg")
-        .attr("width", width)
-        .attr("height", height)
+      const svg = d3.select("#timeline").append("svg")
+        .attr("viewBox", [0, 0, width, height])
         .attr("role", "img")
-        .attr("aria-label", "Chart showing which skills each project used");
+        .attr("aria-label", "Timeline of projects: " +
+          timeline.map(d => `${d.name} (${d.label.replace("&ndash;", "-")})`).join(", "));
 
-      const x = d3.scalePoint().domain(skills).range([margin.left, width - margin.right]).padding(0.5);
-      const y = d3.scaleBand().domain(projects.map(d => d.name)).range([margin.top, height - margin.bottom]).padding(0.2);
+      // Shaded band for time at Northeastern
+      const nuStart = x(parse("2024-09"));
+      svg.append("rect").attr("class", "nu-band")
+        .attr("x", nuStart).attr("y", margin.top - 10)
+        .attr("width", width - margin.right - nuStart)
+        .attr("height", height - margin.top - margin.bottom + 10)
+        .attr("rx", 6);
+      svg.append("text").attr("class", "nu-label")
+        .attr("x", nuStart + 8).attr("y", margin.top - 16)
+        .text("Northeastern University");
+      svg.append("text").attr("class", "nu-label")
+        .attr("x", margin.left).attr("y", margin.top - 16)
+        .text("Monta Vista High School");
 
-      // grid lines
-      svg.append("g").selectAll("line")
-        .data(skills).join("line")
-        .attr("x1", d => x(d)).attr("x2", d => x(d))
-        .attr("y1", margin.top - 6).attr("y2", height - margin.bottom)
-        .style("stroke", "var(--line)");
+      // Year axis
+      svg.append("g").attr("class", "axis")
+        .attr("transform", `translate(0, ${height - margin.bottom + 6})`)
+        .call(d3.axisBottom(x).ticks(d3.timeYear.every(1)).tickFormat(d3.timeFormat("%Y")).tickSizeOuter(0));
 
-      // skill labels
-      svg.append("g").selectAll("text")
-        .data(skills).join("text")
-        .attr("transform", d => `translate(${x(d)}, ${margin.top - 12}) rotate(-40)`)
-        .attr("font-size", 12)
-        .style("fill", "var(--muted)")
-        .text(d => d);
+      const items = svg.append("g").selectAll("g")
+        .data(timeline).join("g")
+        .attr("class", "item")
+        .attr("tabindex", 0)
+        .attr("role", "link")
+        .attr("aria-label", d => `${d.name}, ${d.label.replace("&ndash;", " to ")}. Jump to project card.`)
+        .attr("transform", (d, i) => `translate(0, ${margin.top + rowH * i + rowH / 2})`);
 
-      const rows = svg.append("g").selectAll("g")
-        .data(projects).join("g")
-        .attr("transform", d => `translate(0, ${y(d.name) + y.bandwidth() / 2})`);
+      items.append("line").attr("class", "lane-line")
+        .attr("x1", margin.left).attr("x2", width - margin.right);
 
-      rows.append("rect")
-        .attr("x", 0).attr("y", -y.bandwidth() / 2)
-        .attr("width", width).attr("height", y.bandwidth())
-        .attr("fill", "transparent");
+      // Bars for projects that span time, dots for single dates
+      items.each(function (d) {
+        const g = d3.select(this);
+        const x0 = x(parse(d.start));
+        if (d.end) {
+          g.append("rect").attr("class", "mark")
+            .attr("x", x0).attr("y", -7).attr("height", 14).attr("rx", 7)
+            .attr("width", Math.max(14, x(parse(d.end)) - x0))
+            .attr("fill", color(d.type));
+        } else {
+          g.append("circle").attr("class", "mark").attr("cx", x0).attr("r", 8).attr("fill", color(d.type));
+        }
+        const xEnd = d.end ? x(parse(d.end)) : x0;
+        const right = xEnd < width * 0.6;
+        g.append("text").attr("class", "row-label")
+          .attr("x", right ? xEnd + 14 : x0 - 14)
+          .attr("text-anchor", right ? "start" : "end")
+          .attr("dominant-baseline", "middle")
+          .text(d.name);
+      });
 
-      rows.append("text")
-        .attr("x", margin.left - 12)
-        .attr("text-anchor", "end")
-        .attr("dominant-baseline", "middle")
-        .attr("font-size", 13)
-        .style("fill", "var(--ink)")
-        .text(d => d.name);
+      const showTip = (event, d) => {
+        const [mx, my] = d3.pointer(event, wrap);
+        tip.style("opacity", 1)
+          .style("left", Math.min(mx + 14, wrap.clientWidth - 220) + "px")
+          .style("top", (my + 12) + "px")
+          .html(`<strong>${d.name}</strong><br>${d.label} &middot; ${d.detail}`);
+      };
+      const go = d => {
+        const card = document.getElementById(d.id);
+        card.scrollIntoView({ behavior: "smooth", block: "start" });
+        card.classList.add("flash");
+        setTimeout(() => card.classList.remove("flash"), 1400);
+      };
 
-      rows.selectAll("circle")
-        .data(d => d.uses.map(s => ({ skill: s, type: d.type })))
-        .join("circle")
-        .attr("cx", d => x(d.skill))
-        .attr("r", 8)
-        .attr("fill", d => colors[d.type]);
-
-      rows
-        .on("mousemove", (event, d) => {
-          rows.attr("opacity", r => r === d ? 1 : 0.3);
-          const [mx, my] = d3.pointer(event, document.querySelector(".chart-wrap"));
-          tooltip.style("opacity", 1)
-            .style("left", (mx + 14) + "px")
-            .style("top", (my + 10) + "px")
-            .html(`<strong>${d.name}</strong><br>${d.detail}`);
+      items
+        .on("pointermove", function (event, d) {
+          items.attr("opacity", o => o === d ? 1 : 0.35);
+          showTip(event, d);
         })
-        .on("mouseleave", () => {
-          rows.attr("opacity", 1);
-          tooltip.style("opacity", 0);
-        });
-    }
-
-    d3.select("#legend").selectAll("span")
-      .data(Object.keys(colors)).join("span")
-      .style("--swatch", d => colors[d])
-      .text(d => d);
-
-    draw();
-    window.addEventListener("resize", draw);
+        .on("pointerleave", () => { items.attr("opacity", 1); tip.style("opacity", 0); })
+        .on("click", (event, d) => go(d))
+        .on("keydown", (event, d) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); go(d); } });
+    })();
   </script>
 
 </body>
